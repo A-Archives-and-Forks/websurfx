@@ -210,6 +210,10 @@ impl EngineHandler {
                     let engine = crate::engines::wikipedia::Wikipedia::new("en")?;
                     ("wikipedia", Box::new(engine))
                 }
+                "yahoo" => {
+                    let engine = crate::engines::yahoo::Yahoo::new()?;
+                    ("yahoo", Box::new(engine))
+                }
                 _ => {
                     return Err(Report::from(EngineError::NoSuchEngineFound(
                         engine_name.to_string(),
