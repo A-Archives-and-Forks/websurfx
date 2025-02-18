@@ -13,3 +13,4 @@ pub mod search_result_parser;
 pub mod searx;
 pub mod startpage;
 pub mod wikipedia;
+pub mod yahoo;
