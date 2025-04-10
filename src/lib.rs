@@ -109,6 +109,7 @@ pub async fn run(listener: TcpListener, config: &'static Config) -> std::io::Res
             .service(routes::search::search) // search page
             .service(routes::about) // about page
             .service(routes::settings) // settings page
+            .service(routes::export_import::download) // download page
             .default_service(web::route().to(routes::not_found)) // error page
     })
     .workers(config.threads as usize)

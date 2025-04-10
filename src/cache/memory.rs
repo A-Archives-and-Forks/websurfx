@@ -1,4 +1,4 @@
-//!
+//! This module provides the memory cache structures for enabling the use of memory caching.
 
 use super::{error::CacheError, Cacher};
 use crate::models::aggregation::SearchResults;

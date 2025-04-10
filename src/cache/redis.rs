@@ -2,8 +2,8 @@
 //! from the upstream search engines in a json format.
 
 use super::{error::CacheError, Cacher};
-use crate::parser::Config;
 use crate::models::aggregation::SearchResults;
+use crate::parser::Config;
 use error_stack::Report;
 use futures::stream::FuturesUnordered;
 use redis::{

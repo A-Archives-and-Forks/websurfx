@@ -1,5 +1,6 @@
 //! This module provides the modules which provide the functionality to cache the aggregated
 //! results fetched and aggregated from the upstream search engines in a json format.
+
 use crate::{models::aggregation::SearchResults, parser::Config};
 use error::CacheError;
 use error_stack::Report;
@@ -357,7 +358,16 @@ impl SwitchCache {
         })
     }
 
-    /// A
+    /// A function that fetches the cached data from the respective cache servers.
+    ///
+    /// # Arguments
+    ///
+    /// * `url` - takes the url parameter as string which will be used as key to fetch the data
+    ///   from the cache.
+    ///
+    /// # Error
+    ///
+    /// Returns the cached data on success otherwise returns a custom CacheError on failure.
     async fn cached_results(&mut self, url: &str) -> Result<SearchResults, Report<CacheError>> {
         #[cfg(all(feature = "redis-cache", not(feature = "memory-cache")))]
         {
@@ -378,7 +388,18 @@ impl SwitchCache {
         }
     }
 
+    /// A function that caches the results to the respective cache servers.
     ///
+    /// # Arguments
+    ///
+    /// * `urls` - takes the list of urls for each page which will be used as key for the results
+    ///   to be cached.
+    /// * `search_results` - takes the list of search_results for each page as the value for the
+    ///   respective url key for that page.
+    ///
+    /// # Error
+    ///
+    /// Returns the cached data on success otherwise returns a custom CacheError on failure.
     async fn cache_results(
         &mut self,
         search_results: &[SearchResults],

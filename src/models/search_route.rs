@@ -1,7 +1,8 @@
 //! This module provides the models to parse cookies and search parameters from the search
 //! engine website.
+//!
 use super::parser::Style;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 
 /// A named struct which deserializes all the user provided search parameters and stores them.
@@ -20,16 +21,22 @@ pub struct SearchParams {
 
 /// A named struct which is used to deserialize the cookies fetched from the client side.
 #[allow(dead_code)]
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Cookie<'a> {
+    #[serde(borrow)]
     /// It stores the theme name used in the website.
     pub theme: Cow<'a, str>,
+    #[serde(borrow)]
     /// It stores the colorscheme name used for the website theme.
     pub colorscheme: Cow<'a, str>,
+    #[serde(borrow)]
     /// It stores the user selected upstream search engines selected from the UI.
     pub engines: Cow<'a, [Cow<'a, str>]>,
     /// It stores the user selected safe search level from the UI.
     pub safe_search_level: u8,
+    #[serde(borrow)]
+    /// It stores the animation name used for the website theme.
+    pub animation: Option<Cow<'a, str>>,
 }
 
 impl<'a> Cookie<'a> {
@@ -41,6 +48,10 @@ impl<'a> Cookie<'a> {
             colorscheme: Cow::Borrowed(&style.colorscheme),
             engines: Cow::Owned(engines),
             safe_search_level,
+            animation: style
+                .animation
+                .as_ref()
+                .map(|str| Cow::Borrowed(str.as_str())),
         }
     }
 }
