@@ -69,14 +69,26 @@ fn parse_yahoo_redirect_url(raw_url: &str) -> String {
 
         let encoded_url = &encoded_start[..end_idx];
 
-        match urlencoding::decode(encoded_url) {
-            Ok(decoded) => decoded.into_owned(),
+        // Manual URL decode using url::form_urlencoded
+        match percent_decode(encoded_url.as_bytes()) {
+            Ok(decoded) => decoded,
             Err(_) => raw_url.to_string(), // fallback
         }
     } else {
         raw_url.to_string()
     }
 }
+
+/// Perform a percent-decoding manually using basic Rust stdlib
+fn percent_decode(input: &[u8]) -> Result<String, std::string::FromUtf8Error> {
+    use std::borrow::Cow;
+    let decoded = url::percent_encoding::percent_decode(input).decode_utf8_lossy();
+    match decoded {
+        Cow::Borrowed(s) => Ok(s.to_string()),
+        Cow::Owned(s) => Ok(s),
+    }
+}
+
 
 #[async_trait::async_trait]
 impl SearchEngine for Yahoo {
